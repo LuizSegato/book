@@ -1,8 +1,7 @@
 FROM eclipse-temurin:17-alpine
 
-COPY /app/target/book-0.0.1-SNAPSHOT.jar /app/app.jar
-
 WORKDIR /app
+COPY target/book-0.0.1-SNAPSHOT.jar app.jar
 
 EXPOSE 8080
 
