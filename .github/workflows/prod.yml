@@ -18,17 +18,21 @@ jobs:
       - name: Login docker hub
         run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
       - name: Build docker image
-        run: docker build -t luizfsegato/books:1.0 .
-      - name: Push image docker
-        run: docker push luizfsegato/books:1.0
+        run: docker build -t ${{secrets.DOCKER_USERNAME}}/books:latest .
+      - name: Push to Docker Hub Container Registry
+        run: |
+            docker tag ${{secrets.DOCKER_USERNAME}}/books:latest ${{secrets.DOCKER_USERNAME}}/books:${{github.run_id}}
+                 
+            docker push ${{secrets.DOCKER_USERNAME}}/books:${{github.run_id}}
+            docker push ${{secrets.DOCKER_USERNAME}}/books:latest
 
   deploy:
     needs: build
     runs-on: self-hosted
     steps:
       - name: Pull image from docker hub
-        run: docker pull luizfsegato/books:1.0
+        run: docker pull ${{secrets.DOCKER_USERNAME}}/books:latest
       - name: Remove docker container
         run: docker rm -f books
       - name: Run docker container
-        run: docker run -d -p 8080:8080 -e DATABASE_USERNAME=${{secrets.DATABASE_USERNAME}} -e DATABASE_PASSWORD='${{secrets.DATABASE_PASSWORD}}' -e DATABASE_URL=${{secrets.DATABASE_URL}} --name books luizfsegato/books:1.0
+        run: docker run -d -p 8080:8080 -e DATABASE_USERNAME=${{secrets.DATABASE_USERNAME}} -e DATABASE_PASSWORD='${{secrets.DATABASE_PASSWORD}}' -e DATABASE_HOST=${{secrets.DATABASE_HOST}} -e DATABASE_PORT=${{secrets.DATABASE_PORT}} -e DATABASE_DB_NAME=${{secrets.DATABASE_DB_NAME}} --name books ${{secrets.DOCKER_USERNAME}}/books:latest
