@@ -35,4 +35,4 @@ jobs:
       - name: Remove docker container
         run: docker rm -f books
       - name: Run docker container
-        run: docker run -d -p 8080:8080 -e DATABASE_USERNAME=${{secrets.DATABASE_USERNAME}} -e DATABASE_PASSWORD=${{secrets.DATABASE_PASSWORD}} -e DATABASE_HOST=${{secrets.DATABASE_HOST}} -e DATABASE_PORT=${{secrets.DATABASE_PORT}} -e DATABASE_DB_NAME=${{secrets.DATABASE_DB_NAME}} --name books --network app_with_db ${{secrets.DOCKER_USERNAME}}/books:latest
+        run: docker run -d -p 8080:8080 -e DATABASE_USERNAME=${{secrets.DATABASE_USERNAME}} -e DATABASE_PASSWORD='${{secrets.DATABASE_PASSWORD}}' -e DATABASE_HOST=${{secrets.DATABASE_HOST}} -e DATABASE_PORT=${{secrets.DATABASE_PORT}} -e DATABASE_DB_NAME=${{secrets.DATABASE_DB_NAME}} --name books --network app_with_db ${{secrets.DOCKER_USERNAME}}/books:latest
