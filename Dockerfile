@@ -8,7 +8,7 @@ RUN mvn clean install -DskipTests
 
 FROM eclipse-temurin:17-alpine
 
-COPY --from=build /app/target/book-0.0.1-SNAPSHOT.jar /app/app.jar
+COPY --from=build /app/target/book-git-actions-0.0.1-SNAPSHOT.jar /app/app.jar
 
 WORKDIR /app
 
